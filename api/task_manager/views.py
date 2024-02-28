@@ -74,3 +74,5 @@ def get_task_details(request: HttpRequest, task_id: int):
     )
 
     return JsonResponse(task_data)
+
+

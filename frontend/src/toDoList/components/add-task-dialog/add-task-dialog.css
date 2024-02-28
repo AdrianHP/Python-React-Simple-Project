@@ -1,0 +1,7 @@
+.new-task-form{
+    display: flex;
+    flex-direction: row;
+    height: 500px !important;
+    width: 200px !important;
+    background-color: red !important;
+}
