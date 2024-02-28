@@ -1,7 +1,16 @@
 .new-task-form{
     display: flex;
-    flex-direction: row;
-    height: 500px !important;
-    width: 200px !important;
-    background-color: red !important;
+    flex-direction: column;
+    background-color: rgb(239, 239, 239) ;
+    padding: 10px;
+    overflow: hidden;
+    justify-content: space-evenly;
+    align-items: stretch;
+    padding-bottom: 80px;
+}
+
+.add-task-button{
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
 }
