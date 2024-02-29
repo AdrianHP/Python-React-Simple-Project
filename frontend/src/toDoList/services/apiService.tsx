@@ -19,7 +19,7 @@ export const getUsers = async () => {
 
 export const getTasks = async () => {
   try {
-    const response = await apiService.get('/users/');
+    const response = await apiService.get('/task/getall/');
     return response.data;
   } catch (error) {
     throw error;

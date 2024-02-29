@@ -19,9 +19,9 @@ class User(models.Model):
 
 class Task(models.Model):
     PRIORITIES = {
-        1: "High",
-        2: "Medium",
-        3: "Low",
+        0: "High",
+        1: "Medium",
+        2: "Low",
     }
     PRIORITY_CHOICES = tuple(
         (level, name) for level, name in PRIORITIES.items()

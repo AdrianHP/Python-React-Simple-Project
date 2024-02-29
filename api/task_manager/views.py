@@ -78,6 +78,25 @@ def get_task_details(request: HttpRequest, task_id: int):
     return JsonResponse(task_data)
 
 
+def get_tasks(request: HttpRequest):
+    tasks = Task.objects.all()
+    data = list(
+        dict(
+            id=task.id,
+            assignee_user_id=task.assignee_user_id,
+            title=task.title,
+            details=task.details,
+            priority_level=task.priority,
+            priority_label=task.get_priority_label(),
+            is_completed=task.is_completed,
+            is_accepted=task.is_accepted,
+            created_at=task.created_at,
+        ) for task in tasks
+    )
+
+    return JsonResponse(dict(tasks=data))
+    
+
 def add_task(request: HttpRequest):
     if request.method == "POST":
         post_data = json.loads(request.body.decode("utf-8"))

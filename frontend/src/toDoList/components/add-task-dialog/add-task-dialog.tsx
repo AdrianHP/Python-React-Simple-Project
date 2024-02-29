@@ -14,18 +14,19 @@ export const enum PriorityEnum{
 
 export interface AddTaskDialogProps {
     open: boolean;
-    newTask?: Task;
-    onClose: (value?: Task) => void;
+    
+    onClose: (value: Task) => void;
   }
 
 
 function AddTaskDialog(props:AddTaskDialogProps)
 {
-  const { onClose, newTask, open } = props;
+  const { onClose,  open } = props;
   const [priority, setPriority] = useState<PriorityEnum>(PriorityEnum.Low);
   const [name, setName] = useState<string>("");
    
   const handleClose = () => {
+    const newTask = {title: name,priority:priority};
     onClose(newTask);
   };
   const handlePriorityChange = (event: SelectChangeEvent<typeof priority>) => {
