@@ -21,4 +21,5 @@ urlpatterns = [
     path('users/', views.list_users),
     path('users/<int:user_id>/tasks/', views.list_users_tasks),
     path('tasks/<int:task_id>/', views.get_task_details),
+    path('task/add/', views.add_task),
 ]

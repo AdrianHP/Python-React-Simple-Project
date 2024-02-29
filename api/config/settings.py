@@ -17,7 +17,7 @@ from distutils.util import strtobool
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get('APP_KEY')
+SECRET_KEY = 1234
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = strtobool(os.environ.get('APP_DEBUG', 'True'))

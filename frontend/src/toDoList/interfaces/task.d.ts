@@ -2,7 +2,7 @@ import { User } from "./users";
 import { PriorityEnum } from "../components/add-task-dialog/add-task-dialog";
 export interface Task{
     id?: string;
-    assignee_user?: User;
+    assignee_user?: User|string;
     title?: string;
     priority?: PriorityEnum;
     details?: string;

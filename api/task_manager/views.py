@@ -1,5 +1,7 @@
+import json
 from django.http import JsonResponse, HttpRequest
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 
 from .models import Task, User
 
@@ -76,3 +78,20 @@ def get_task_details(request: HttpRequest, task_id: int):
     return JsonResponse(task_data)
 
 
+def add_task(request: HttpRequest):
+    if request.method == "POST":
+        post_data = json.loads(request.body.decode("utf-8"))
+        newRecord = Task(
+            title = post_data ['title'],
+            priority = post_data['priority'],
+            is_completed = False,
+            is_accepted = False,
+            created_at = datetime.now()
+        )
+        newRecord.save()
+        print(post_data)
+        return JsonResponse({'response':'200'})
+
+def edit_task(request: HttpRequest):
+    if request.method == "PUT":
+        post_data = json.loads(request.body.decode("utf-8"))
