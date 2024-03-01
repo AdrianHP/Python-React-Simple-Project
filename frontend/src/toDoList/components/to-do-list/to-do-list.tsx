@@ -1,35 +1,54 @@
 
 import { useState, useEffect } from "react";
-
-import { addTask, getTasks, getUsers } from "../../services/apiService";
+import { getTasks, getUsers } from "../../services/apiService";
 import { User } from "../../interfaces/users";
 import { Task } from "../../interfaces/task";
 import AddTaskDialog, { PriorityEnum } from "../add-task-dialog/add-task-dialog";
-import { Button, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-interface Todo {
-    id: string;
-    text: string;
-  }
+import { Button } from "@mui/material";
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import './to-do-list.css'
+
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'Number', width: 130 },
-  { field: 'title', headerName: 'Name', width: 130 },
-  { field: 'priority', headerName: 'Priority', width: 130 },
+  { field: 'id', headerName: 'ID', width: 140 , headerClassName:'datagrid-column-header'},
+  { field: 'title', headerName: 'Name', width: 390, headerClassName:'datagrid-column-header' },
+  { field: 'priority_label', headerName: 'Priority', width: 140,  headerClassName:'datagrid-column-header'},
+   {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 160,
+      headerClassName:'datagrid-column-header',
+      
+      getActions: ({ id }) => {
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            // onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            // onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
 ];
 
 
 
 function ToDoList() {
   const [users,setUsers] =  useState<User[]>([]);
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState<string>("");
   
   const [tasks,setTasks] = useState<Task[]>([]);
-  const [newTask,setnewTask] =  useState<Task>();
   const [open, setOpen] = useState(false);
-  
-  var rows =[];
   
   async function fetchUsers() {
     try {
@@ -43,15 +62,13 @@ function ToDoList() {
   async function fetchTask() {
     try {
       const result = await getTasks();
-      setTasks(result);
+      setTasks(result.tasks);
       console.log(tasks)
       
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
-     
- 
   
   useEffect(() => {
     fetchUsers();
@@ -59,85 +76,73 @@ function ToDoList() {
   }, []);
 
   useEffect(()=>{
-    rows = Object.entries(tasks).slice(1)
-    console.log(rows)
-  },tasks)
-
- 
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+    // fetchTask();
+  },[tasks])
 
   const handleClose = (value: Task) => {
     setOpen(false);
     if (value.title != undefined)
     {
-      
-      var newTasks = tasks;
-      newTasks.tasks.push(value);
-      
+      const id = Math.random() * 10000
+      var newTasks = [...tasks];
+      newTasks.push({
+        ...value,
+        id: id.toString()
+      });
       setTasks(newTasks);
       console.log(tasks)
     }
   };
     
-
-
-
-    
-    
-    
-  const addTodo = () => {
-    // Implement the logic to add a new to-do item here
-  };
-  
-  const deleteTodo = (id?: string) => {
-    // Implement the logic to delete a to-do item here
-  };
-  
-  // Render the list of todos and the input field for adding new todos
-
   return (
     <>
     <h1>To-Do List</h1>
-    {/* <input
-      type="text"
-      value={newTodo}
-      onChange={(e) => setNewTodo(e.target.value)}
-      placeholder="Add a new task" />
-    
-    <button onClick={addTodo}>Add</button>
-    <ul>
-      {tasks.map((todo) => (
-        <li key={todo.id}>
-          {todo.title}
-          <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-        </li>
-      ))}
-    </ul> */}
-    
-    <div>
-  
-    <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-      Open simple dialog
+    <Button sx={{
+      fontWeight:'bold',
+      marginBottom: '4px',
+      fontSize:'18px',
+      backgroundcolor: 'whitesmoke',
+      marginbottom: '3px',
+      border:'solid'}} 
+      color="primary" 
+      onClick={ ()=>{setOpen(true)}}>
+      Add New Todo
     </Button>
-    <div style={{ height: 400, width: '100%' }}>
+    
+    <div style={{ maxHeight: '500px', width: '100%' }}>
       <DataGrid
-        rows={rows  }
+       sx={{
+        boxShadow: 2,
+        border: 2,
+        backgroundColor:'whitesmoke',
+        fontWeight: 'bold',
+        fontSize:'17px',
+        color: '#1b201fd1',
+        borderColor: 'primary.light',
+        '& .MuiDataGrid-cell:hover': {
+          color: 'primary.main',
+        },
+        '& .datagrid-column-header':
+        {
+          fontSize:'19px',
+          color: 'black',
+          fontFamily: 'fantasy',
+        }
+       
+      }}
+        rows={tasks}
+        autoHeight {...tasks}
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+          paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
+        pageSizeOptions={[5, 10, 20]}
       />
     </div>    
 
     <AddTaskDialog  open={open} onClose={handleClose} />
-    </div>
     </>
     );
 }

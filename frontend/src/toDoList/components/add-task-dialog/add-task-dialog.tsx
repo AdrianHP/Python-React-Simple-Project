@@ -14,7 +14,6 @@ export const enum PriorityEnum{
 
 export interface AddTaskDialogProps {
     open: boolean;
-    
     onClose: (value: Task) => void;
   }
 
