@@ -4,51 +4,84 @@ import CloseIcon from '@mui/icons-material/Close';
 import {DialogTitle} from "@mui/material";
 import './add-task-dialog.css'
 import { Task } from "../../interfaces/task";
-import { addTask } from "../../services/apiService";
+import { addTask,editTask } from "../../services/apiService";
 
-export const enum PriorityEnum{
-  High,
-  Medium,
-  Low
-}
+
 
 export interface AddTaskDialogProps {
     open: boolean;
-    onClose: (value: Task) => void;
+    isEditing:boolean;
+    inputTask?:Task;
+    onClose: (value?: Task) => void;
   }
 
 
 function AddTaskDialog(props:AddTaskDialogProps)
 {
-  const { onClose,  open } = props;
-  const [priority, setPriority] = useState<PriorityEnum>(PriorityEnum.Low);
+  const { onClose, isEditing,inputTask, open } = props;
+  const [priority, setPriority] = useState<number>(0);
   const [name, setName] = useState<string>("");
    
-  const handleClose = () => {
-    const newTask = {title: name,priority:priority};
-    onClose(newTask);
+  const handleClose = (toSave:boolean) => {
+    //If true then I am adding a new task
+    if (toSave && isEditing ==false)
+    {
+      const newTask = {title: name,priority:priority};
+      onClose(newTask);
+    }
+    //im editing, deleting or cancel 
+    else
+      onClose(undefined);
+
+    setPriority(0);
+    setName("");
+    
   };
   const handlePriorityChange = (event: SelectChangeEvent<typeof priority>) => {
-    setPriority(event.target.value as PriorityEnum)
+    setPriority(event.target.value as number)
   };
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
   const saveTask =  async () =>{
-    const newTask = {title: name,priority:priority};
-    await addTask(newTask);
-    handleClose();
+   
+    if(isEditing)
+    {
+      var taskToEdit = {...inputTask}
+      taskToEdit.title = name;
+      taskToEdit.priority_level = priority;
+      await editTask( taskToEdit as Task );
+    }
+    else
+    {
+      const newTask = {title: name,priority:priority};
+      await addTask(newTask);
+    }
+      
+    handleClose(true);
   };
   
+  useEffect( ()=>{
+    console.log(inputTask);
+     if (inputTask != undefined && isEditing == true)
+     {
+      setPriority(inputTask.priority_level as number);
+      setName(inputTask.title as string)
+     }
+  },[inputTask])
   
   return(
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-        Add New Task 
+        {isEditing? (
+        <>Edit Task </>
+        ):(
+        <> Add New Task </> 
+        )}
       </DialogTitle>
       <IconButton
         aria-label="close"
-        onClick={handleClose}
+        onClick={() => handleClose(false)}
         sx={{
           position: 'absolute',
           right: 8,
@@ -68,12 +101,12 @@ function AddTaskDialog(props:AddTaskDialogProps)
             onChange={handlePriorityChange}
             label="Priority"
           >
-            <MenuItem value={PriorityEnum.Low}>Low</MenuItem>
-            <MenuItem value={PriorityEnum.Medium}>Medium</MenuItem>
-            <MenuItem value={PriorityEnum.High}>High</MenuItem>
+            <MenuItem value={2}>Low</MenuItem>
+            <MenuItem value={1}>Medium</MenuItem>
+            <MenuItem value={0}>High</MenuItem>
           </Select>
         </FormControl>
-        <div className="add-task-button"><Button  onClick={saveTask} variant="contained" color="success"> Add Task</Button></div>
+        <div className="add-task-button"><Button  onClick={saveTask} variant="contained" color="success"> Save</Button></div>
       </div>
     </Dialog>
   );

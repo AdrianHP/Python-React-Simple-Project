@@ -114,3 +114,17 @@ def add_task(request: HttpRequest):
 def edit_task(request: HttpRequest):
     if request.method == "PUT":
         post_data = json.loads(request.body.decode("utf-8"))
+        task = get_object_or_404(Task,id = post_data['id'])
+        task.title = post_data['title']
+        task.priority = post_data['priority_level']
+        task.is_completed = post_data['is_completed']
+        task.is_accepted = post_data['is_accepted']
+        task.save()
+        return JsonResponse({'response':'200'})
+
+def delete_task(request: HttpRequest):
+    if request.method == "DELETE":
+        task_id = request.GET.get('task_id')
+        task = get_object_or_404(Task,id = task_id)
+        task.delete()
+        return JsonResponse({'response':'200'})

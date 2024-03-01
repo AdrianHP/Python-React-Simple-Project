@@ -35,3 +35,21 @@ export const addTask = async (task:Task) => {
   }
 };
 
+export const editTask = async (task:Task) => {
+  try {
+    const response = await apiService.put('/task/edit/',task);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteTask = async (id:string) => {
+  try {
+    const response = await apiService.delete('/task/delete/',{params:{ task_id:id}});
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+

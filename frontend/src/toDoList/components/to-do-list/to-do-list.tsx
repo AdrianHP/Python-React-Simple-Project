@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { getTasks, getUsers } from "../../services/apiService";
+import { deleteTask, getTasks, getUsers } from "../../services/apiService";
 import { User } from "../../interfaces/users";
 import { Task } from "../../interfaces/task";
 import AddTaskDialog, { PriorityEnum } from "../add-task-dialog/add-task-dialog";
@@ -11,44 +11,17 @@ import './to-do-list.css'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 140 , headerClassName:'datagrid-column-header'},
-  { field: 'title', headerName: 'Name', width: 390, headerClassName:'datagrid-column-header' },
-  { field: 'priority_label', headerName: 'Priority', width: 140,  headerClassName:'datagrid-column-header'},
-   {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
-      width: 160,
-      headerClassName:'datagrid-column-header',
-      
-      getActions: ({ id }) => {
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            // onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            // onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-];
+
+
 
 
 
 function ToDoList() {
   const [users,setUsers] =  useState<User[]>([]);
-  
   const [tasks,setTasks] = useState<Task[]>([]);
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedTask,setselectedTask] = useState<Task>();
   
   async function fetchUsers() {
     try {
@@ -81,18 +54,73 @@ function ToDoList() {
 
   const handleClose = (value: Task) => {
     setOpen(false);
-    if (value.title != undefined)
+    setIsEditing(false);
+    setselectedTask(undefined);
+    fetchTask();
+    if (value!= undefined && value.title != undefined)
     {
-      const id = Math.random() * 10000
+      //this block is for user experience In case the API response takes a long time, provide the data and then overwrite
+      const id = -1;
       var newTasks = [...tasks];
       newTasks.push({
         ...value,
         id: id.toString()
       });
+      //////////
+
       setTasks(newTasks);
-      console.log(tasks)
     }
+    
   };
+  const handleEditClick =(id) =>()=>{
+    
+    const inputTask = tasks.find(x=>x.id==id);
+    setselectedTask(inputTask);
+    setOpen(true);
+    setIsEditing(true);
+    console.log(id);
+    console.log(selectedTask);
+  };
+
+  const handleDeleteClick =(id) =>()=>{
+    const updateTasks = [...tasks.filter(x => x.id !=id)];
+    setTasks(updateTasks);
+    deleteTask(id);
+    // fetchTask();
+   
+  
+  };
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 140 , headerClassName:'datagrid-column-header'},
+    { field: 'title', headerName: 'Name', width: 390, headerClassName:'datagrid-column-header' },
+    { field: 'priority_label', headerName: 'Priority', width: 140,  headerClassName:'datagrid-column-header'},
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 160,
+      headerClassName:'datagrid-column-header',
+      getActions: ({ id }) => {
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+
     
   return (
     <>
@@ -142,7 +170,7 @@ function ToDoList() {
       />
     </div>    
 
-    <AddTaskDialog  open={open} onClose={handleClose} />
+    <AddTaskDialog inputTask={selectedTask} open={open} isEditing = {isEditing} onClose={handleClose} />
     </>
     );
 }

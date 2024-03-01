@@ -1,10 +1,10 @@
 import { User } from "./users";
-import { PriorityEnum } from "../components/add-task-dialog/add-task-dialog";
 export interface Task{
     id?: string;
     assignee_user?: User|string;
     title?: string;
-    priority?: PriorityEnum;
+    priority_label: string
+    priority_level: number
     details?: string;
     is_complete?: boolean;
     is_accepted?: boolean;

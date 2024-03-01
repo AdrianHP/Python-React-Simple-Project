@@ -22,5 +22,7 @@ urlpatterns = [
     path('users/<int:user_id>/tasks/', views.list_users_tasks),
     path('tasks/<int:task_id>/', views.get_task_details),
     path('task/add/', views.add_task),
+    path('task/edit/', views.edit_task),
+    path('task/delete/', views.delete_task),
     path('task/getall/', views.get_tasks),
 ]
