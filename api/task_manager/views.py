@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from datetime import datetime
-
+from django.contrib.auth.decorators import login_required
 from .models import Task, User
 
 
@@ -77,7 +77,7 @@ def get_task_details(request: HttpRequest, task_id: int):
 
     return JsonResponse(task_data)
 
-
+@login_required
 def get_tasks(request: HttpRequest):
     tasks = Task.objects.all()
     data = list(

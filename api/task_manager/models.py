@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 
 
 
@@ -8,13 +10,9 @@ class Address(models.Model):
     state = models.CharField(max_length=2)
     postal_code = models.CharField(max_length=10)
 
+class User(AbstractUser):
+    address = models.OneToOneField(Address, models.CASCADE,null=True)
 
-class User(models.Model):
-    username = models.CharField(max_length=30)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(null=True)
-    address = models.OneToOneField(Address, models.CASCADE)
 
 
 class Task(models.Model):
