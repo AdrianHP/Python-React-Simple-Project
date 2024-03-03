@@ -4,7 +4,6 @@ import ToDoList from "../toDoList/components/to-do-list/ToDoList";
 
 function HomePage() {
   const { user } = useContext(AuthContext);
-  console.log(user);
   return user ? (
     <div>
       <p>You are logged in to the homepage!</p>

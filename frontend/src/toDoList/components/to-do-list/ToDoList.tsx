@@ -33,7 +33,6 @@ function ToDoList() {
 
   useEffect(() => {
     fetchTask();
-    createUser();
   }, []);
 
   const handleClose = async (value: Task) => {

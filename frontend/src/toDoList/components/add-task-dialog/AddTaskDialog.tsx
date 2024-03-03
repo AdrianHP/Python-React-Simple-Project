@@ -68,7 +68,6 @@ function AddTaskDialog(props: AddTaskDialogProps) {
   };
 
   useEffect(() => {
-    console.log(inputTask);
     if (inputTask != undefined && isEditing == true) {
       setPriority(inputTask.priority_level as number);
       setName(inputTask.title as string);

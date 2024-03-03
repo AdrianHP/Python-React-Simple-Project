@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse, HttpRequest
+from django.http import HttpResponse, JsonResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
@@ -38,7 +38,7 @@ def list_users(request: HttpRequest):
 
 
 def list_users_tasks(request: HttpRequest, user_id: int):
-    tasks = Task.objects.filter(assignee_user_id=user_id).order_by('is_completed', 'priority', 'created_at')
+    tasks = Task.objects.filter(assignee_user_id=user_id).order_by('created_at','is_completed', 'priority' )
     data = list(
         dict(
             id=task.id,
@@ -120,7 +120,7 @@ def add_task(request: HttpRequest):
         )
         newRecord.save()
         print(post_data)
-        return JsonResponse({'response':'200'})
+        return HttpResponse({'response':'200'})
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -133,7 +133,7 @@ def edit_task(request: HttpRequest):
         task.is_completed = post_data['is_completed']
         task.is_accepted = post_data['is_accepted']
         task.save()
-        return JsonResponse({'response':'200'})
+        return HttpResponse({'response':'200'})
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -142,4 +142,4 @@ def delete_task(request: HttpRequest):
         task_id = request.GET.get('task_id')
         task = get_object_or_404(Task,id = task_id)
         task.delete()
-        return JsonResponse({'response':'200'})
+        return HttpResponse({'response':'200'})

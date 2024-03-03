@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { createContext, useEffect, useState } from "react";
+import { FormEvent, createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
@@ -21,16 +21,17 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  let loginUser = async (e) => {
+  let loginUser = async (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const input = new FormData(e.currentTarget);
     const response = await fetch("http://127.0.0.1:8080/login/token/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: e.target.username.value,
-        password: e.target.password.value,
+        username: input.get('username'),
+        password: input.get('password'),
       }),
     });
 

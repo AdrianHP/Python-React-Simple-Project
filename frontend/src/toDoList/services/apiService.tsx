@@ -16,17 +16,9 @@ export const getUsers = async (authToken) => {
   }
 };
 
-export const createUser = async () => {
-  const test = {
-    username1:'a1drian1234',
-    password1: 'Ahp2409!',
-    password2: 'Ahp2409!',
-    email:'a1sssd@asd.com',
-    
-    // last_name:'hernandez',
-  }
+export const createUser = async (data:{}) => {
   try {
-    const response = await apiService.post("login/register/",test);
+    const response = await apiService.post("login/register/",data);
     return response.data;
   } catch (error) {
     throw error;

@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -39,16 +39,18 @@ def registerView(request):
         email = post_data['email']
         password1 = post_data['password1']
         password2 = post_data['password2']
+        first_name = post_data['firstName']
+        last_name = post_data['lastName']
 
         if password2== password1:
             if User.objects.filter(email = email).exists():
-                return JsonResponse('Email already exists')
+                return HttpResponse('Email already exists')
             elif User.objects.filter(username = username1).exists():
-                 return JsonResponse('Username already exists')
+                 return HttpResponse('Username already exists')
             else:
-                user= User.objects.create_user(username=username1,email=email,password=password1)
+                user= User.objects.create_user(username=username1,email=email,password=password1,first_name=first_name,last_name=last_name)
                 user.save()
-                JsonResponse('User Created')
+                return HttpResponse('User Created')
         else:
-            return JsonResponse('password is not the same')
+            return HttpResponse('password is not the same')
    

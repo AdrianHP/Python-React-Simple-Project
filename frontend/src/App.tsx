@@ -7,6 +7,7 @@ import Header from "./shared/components/Header";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./shared/utils/PrivateRoutes";
 import { AuthProvider } from "./shared/context/AuthContex";
+import RegisterPage from "./pages/RegisterPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
               }
             />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </AuthProvider>
       </Router>
