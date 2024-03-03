@@ -16,7 +16,7 @@ function ToDoList() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedTask, setselectedTask] = useState<Task>();
   const { authTokens, logoutUser } = useContext(AuthContext);
-  
+
   const headers = {
     "Content-Type": "application/json",
     Authorization: "Bearer " + String(authTokens.access),
@@ -24,7 +24,6 @@ function ToDoList() {
 
   async function fetchTask() {
     try {
-     
       const result = await getTasks(headers);
       setTasks([...result.tasks]);
     } catch (error) {
@@ -40,7 +39,7 @@ function ToDoList() {
     setOpen(false);
     setIsEditing(false);
     setselectedTask(undefined);
-   
+
     if (value != undefined && value.title != undefined) {
       //this block is for user experience In case the API response takes a long time, provide the data and then overwrite
       const id = -1;
@@ -62,10 +61,10 @@ function ToDoList() {
     setIsEditing(true);
   };
 
-  const handleDeleteClick =  (id) => () => {
+  const handleDeleteClick = (id) => () => {
     const updateTasks = [...tasks.filter((x) => x.id != id)];
     setTasks(updateTasks);
-    deleteTask(headers,id);
+    deleteTask(headers, id);
     // fetchTask();
   };
 
