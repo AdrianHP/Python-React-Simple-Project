@@ -1,17 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from django.contrib.auth.models import User
 
 
+# class Address(models.Model):
+#     street = models.CharField(max_length=50)
+#     city = models.CharField(max_length=30)
+#     state = models.CharField(max_length=2)
+#     postal_code = models.CharField(max_length=10)
 
-class Address(models.Model):
-    street = models.CharField(max_length=50)
-    city = models.CharField(max_length=30)
-    state = models.CharField(max_length=2)
-    postal_code = models.CharField(max_length=10)
-
-class User(AbstractUser):
-    address = models.OneToOneField(Address, models.CASCADE,null=True)
+# class User(AbstractUser):
+#     address = models.OneToOneField(Address, models.CASCADE,null=True)
 
 
 

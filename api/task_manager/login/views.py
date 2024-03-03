@@ -1,8 +1,13 @@
+import json
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from login import serializers
+from rest_framework.exceptions import AuthenticationFailed
+from .forms import SignupForm, UserCreationForm, LoginForm
+from django.contrib.auth.models import User
 
 @api_view(['GET'])
 def get_routes(request):
@@ -23,3 +28,27 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+
+# @api_view(['POST'])
+def registerView(request):
+    if request.method == 'POST':
+        post_data = json.loads(request.body.decode("utf-8"))
+        username1 =post_data['username1']
+        email = post_data['email']
+        password1 = post_data['password1']
+        password2 = post_data['password2']
+
+        if password2== password1:
+            if User.objects.filter(email = email).exists():
+                return JsonResponse('Email already exists')
+            elif User.objects.filter(username = username1).exists():
+                 return JsonResponse('Username already exists')
+            else:
+                user= User.objects.create_user(username=username1,email=email,password=password1)
+                user.save()
+                JsonResponse('User Created')
+        else:
+            return JsonResponse('password is not the same')
+   

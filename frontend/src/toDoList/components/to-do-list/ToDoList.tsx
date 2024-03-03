@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { deleteTask, getTasks, getUsers } from "../../services/apiService";
+import { createUser, deleteTask, getTasks, getUsers } from "../../services/apiService";
 
 import { Task } from "../../interfaces/task";
 import AddTaskDialog from "../add-task-dialog/AddTaskDialog";
@@ -33,6 +33,7 @@ function ToDoList() {
 
   useEffect(() => {
     fetchTask();
+    createUser();
   }, []);
 
   const handleClose = async (value: Task) => {
@@ -55,7 +56,8 @@ function ToDoList() {
     await fetchTask();
   };
   const handleEditClick = (id) => () => {
-    const inputTask = tasks.find((x) => x.id == id);
+    
+    // const inputTask = tasks.find((x) => x.id == id);
     setselectedTask(inputTask);
     setOpen(true);
     setIsEditing(true);

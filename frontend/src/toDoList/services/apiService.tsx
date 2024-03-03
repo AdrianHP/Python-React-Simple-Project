@@ -16,6 +16,26 @@ export const getUsers = async (authToken) => {
   }
 };
 
+export const createUser = async () => {
+  const test = {
+    username1:'a1drian1234',
+    password1: 'Ahp2409!',
+    password2: 'Ahp2409!',
+    email:'a1sssd@asd.com',
+    
+    // last_name:'hernandez',
+  }
+  try {
+    const response = await apiService.post("login/register/",test);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
 export const getTasks = async (headers) => {
   try {
     const response = await apiService.get("/task/getall/", {
