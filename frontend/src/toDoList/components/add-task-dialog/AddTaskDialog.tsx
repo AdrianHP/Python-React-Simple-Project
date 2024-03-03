@@ -1,10 +1,11 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import { Button, Dialog, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {DialogTitle} from "@mui/material";
-import './add-task-dialog.css'
+import './AddTaskDialog.css';
 import { Task } from "../../interfaces/task";
 import { addTask,editTask } from "../../services/apiService";
+import AuthContext from "../../../shared/context/AuthContex";
 
 
 
@@ -21,7 +22,14 @@ function AddTaskDialog(props:AddTaskDialogProps)
   const { onClose, isEditing,inputTask, open } = props;
   const [priority, setPriority] = useState<number>(0);
   const [name, setName] = useState<string>("");
-   
+  const { authTokens, logoutUser } = useContext(AuthContext);
+  
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + String(authTokens.access),
+  }; 
+
+
   const handleClose = (toSave:boolean) => {
     //If true then I am adding a new task
     if (toSave && isEditing ==false)
@@ -50,12 +58,12 @@ function AddTaskDialog(props:AddTaskDialogProps)
       var taskToEdit = {...inputTask}
       taskToEdit.title = name;
       taskToEdit.priority_level = priority;
-      await editTask( taskToEdit as Task );
+      await editTask(headers, taskToEdit as Task );
     }
     else
     {
       const newTask = {title: name,priority:priority};
-      await addTask(newTask);
+      await addTask(headers,newTask);
     }
       
     handleClose(true);

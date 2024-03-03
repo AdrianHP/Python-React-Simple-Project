@@ -93,7 +93,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
@@ -177,3 +177,4 @@ LOGIN_REDIRECT_URL = '/'
 
 # Allow all hostnames to make cross-origin requests to this API. Although this isn't safe for production, it's OK here.
 CORS_ORIGIN_ALLOW_ALL = True
+

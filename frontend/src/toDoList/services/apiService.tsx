@@ -8,7 +8,7 @@ const apiService = axios.create({
 });
 
 
-export const getUsers = async () => {
+export const getUsers = async (authToken) => {
   try {
     const response = await apiService.get('/users/');
     return response.data;
@@ -17,36 +17,37 @@ export const getUsers = async () => {
   }
 };
 
-export const getTasks = async () => {
+export const getTasks = async (headers) => {
+ 
   try {
-    const response = await apiService.get('/task/getall/');
+    const response = await apiService.get('/task/getall/',{headers:headers});
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const addTask = async (task:Task) => {
+export const addTask = async (headers,task:Task) => {
   try {
-    const response = await apiService.post('/task/add/',task);
+    const response = await apiService.post('/task/add/',task,{headers:headers});
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const editTask = async (task:Task) => {
+export const editTask = async (headers,task:Task) => {
   try {
-    const response = await apiService.put('/task/edit/',task);
+    const response = await apiService.put('/task/edit/',task,{headers:headers});
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteTask = async (id:string) => {
+export const deleteTask = async (headers,id:string) => {
   try {
-    const response = await apiService.delete('/task/delete/',{params:{ task_id:id}});
+    const response = await apiService.delete('/task/delete/',{params:{ task_id:id},headers:headers});
     return response.data;
   } catch (error) {
     throw error;

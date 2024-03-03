@@ -3,7 +3,14 @@ from django.http import JsonResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
-
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 from task_manager.models import Task, User
 # from .models import Task, User
 
@@ -79,7 +86,8 @@ def get_task_details(request: HttpRequest, task_id: int):
 
     return JsonResponse(task_data)
 
-# @login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_tasks(request: HttpRequest):
     tasks = Task.objects.all()
     data = list(
@@ -98,7 +106,8 @@ def get_tasks(request: HttpRequest):
 
     return JsonResponse(dict(tasks=data))
     
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_task(request: HttpRequest):
     if request.method == "POST":
         post_data = json.loads(request.body.decode("utf-8"))
@@ -113,6 +122,8 @@ def add_task(request: HttpRequest):
         print(post_data)
         return JsonResponse({'response':'200'})
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def edit_task(request: HttpRequest):
     if request.method == "PUT":
         post_data = json.loads(request.body.decode("utf-8"))
@@ -124,6 +135,8 @@ def edit_task(request: HttpRequest):
         task.save()
         return JsonResponse({'response':'200'})
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_task(request: HttpRequest):
     if request.method == "DELETE":
         task_id = request.GET.get('task_id')
