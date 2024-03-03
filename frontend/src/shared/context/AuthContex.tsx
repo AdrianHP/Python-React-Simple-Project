@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  let loginUser = async (e:FormEvent<HTMLFormElement>) => {
+  let loginUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const input = new FormData(e.currentTarget);
     const response = await fetch("http://127.0.0.1:8080/login/token/", {
@@ -30,8 +30,8 @@ export const AuthProvider = ({ children }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: input.get('username'),
-        password: input.get('password'),
+        username: input.get("username"),
+        password: input.get("password"),
       }),
     });
 

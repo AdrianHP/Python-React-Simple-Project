@@ -36,8 +36,10 @@ def list_users(request: HttpRequest):
 
     return JsonResponse(dict(users=data))
 
-
-def list_users_tasks(request: HttpRequest, user_id: int):
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_users_tasks(request: HttpRequest):
+    user_id = request.GET.get('user_id')
     tasks = Task.objects.filter(assignee_user_id=user_id).order_by('created_at','is_completed', 'priority' )
     data = list(
         dict(
@@ -55,14 +57,14 @@ def list_users_tasks(request: HttpRequest, user_id: int):
 
     return JsonResponse(dict(tasks=data))
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_task_details(request: HttpRequest, task_id: int):
     task = get_object_or_404(Task, id=task_id)
     notes = task.tasknote_set.all()
 
     notes_data = list(
         dict(
-            # TODO: remove and update UI to retrieve values from state store.
             user=dict(
                 id=note.user.id,
                 first_name=note.user.first_name,
@@ -109,6 +111,7 @@ def get_tasks(request: HttpRequest):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_task(request: HttpRequest):
+    user_id = request.GET.get('user_id')
     if request.method == "POST":
         post_data = json.loads(request.body.decode("utf-8"))
         newRecord = Task(
@@ -116,7 +119,8 @@ def add_task(request: HttpRequest):
             priority = post_data['priority'],
             is_completed = False,
             is_accepted = False,
-            created_at = datetime.now()
+            created_at = datetime.now(),
+            assignee_user_id = user_id,
         )
         newRecord.save()
         print(post_data)

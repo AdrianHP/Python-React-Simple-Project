@@ -16,17 +16,14 @@ export const getUsers = async (authToken) => {
   }
 };
 
-export const createUser = async (data:{}) => {
+export const createUser = async (data: {}) => {
   try {
-    const response = await apiService.post("login/register/",data);
+    const response = await apiService.post("login/register/", data);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-
-
-
 
 export const getTasks = async (headers) => {
   try {
@@ -39,9 +36,24 @@ export const getTasks = async (headers) => {
   }
 };
 
+export const getUserTasks = async (headers,userId:string) => {
+  try {
+    const response = await apiService.get("/task/get/usertasks",{
+      params: { user_id: String(userId) },
+      headers: headers,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 export const addTask = async (headers, task: Task) => {
   try {
     const response = await apiService.post("/task/add/", task, {
+      params: { user_id: '2' },
       headers: headers,
     });
     return response.data;
@@ -53,6 +65,7 @@ export const addTask = async (headers, task: Task) => {
 export const editTask = async (headers, task: Task) => {
   try {
     const response = await apiService.put("/task/edit/", task, {
+      params: { user_id: '2' },
       headers: headers,
     });
     return response.data;

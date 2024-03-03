@@ -1,5 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { createUser, deleteTask, getTasks, getUsers } from "../../services/apiService";
+import {
+  createUser,
+  deleteTask,
+  getTasks,
+  getUserTasks,
+  getUsers,
+} from "../../services/apiService";
 
 import { Task } from "../../interfaces/task";
 import AddTaskDialog from "../add-task-dialog/AddTaskDialog";
@@ -9,13 +15,14 @@ import "./ToDoList.css";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AuthContext from "../../../shared/context/AuthContex";
+import dayjs from "dayjs";
 
 function ToDoList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedTask, setselectedTask] = useState<Task>();
-  const { authTokens, logoutUser } = useContext(AuthContext);
+  const { user, authTokens, logoutUser } = useContext(AuthContext);
 
   const headers = {
     "Content-Type": "application/json",
@@ -24,7 +31,7 @@ function ToDoList() {
 
   async function fetchTask() {
     try {
-      const result = await getTasks(headers);
+      const result = await getUserTasks(headers, user["user_id"]);
       setTasks([...result.tasks]);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,8 +62,7 @@ function ToDoList() {
     await fetchTask();
   };
   const handleEditClick = (id) => () => {
-    
-    // const inputTask = tasks.find((x) => x.id == id);
+    const inputTask = tasks.find((x) => x.id == id);
     setselectedTask(inputTask);
     setOpen(true);
     setIsEditing(true);
@@ -79,20 +85,29 @@ function ToDoList() {
     {
       field: "title",
       headerName: "Name",
-      width: 390,
+      width: 370,
       headerClassName: "datagrid-column-header",
     },
     {
       field: "priority_label",
       headerName: "Priority",
-      width: 140,
+      width: 110,
       headerClassName: "datagrid-column-header",
+    },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      width: 200,
+      headerClassName: "datagrid-column-header",
+      type: "Date",
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY hh:mm"),
     },
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 160,
+      width: 140,
       headerClassName: "datagrid-column-header",
       getActions: ({ id }) => {
         return [

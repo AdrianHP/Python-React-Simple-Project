@@ -31,7 +31,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 
-# @api_view(['POST'])
+@api_view(['POST'])
 def registerView(request):
     if request.method == 'POST':
         post_data = json.loads(request.body.decode("utf-8"))
