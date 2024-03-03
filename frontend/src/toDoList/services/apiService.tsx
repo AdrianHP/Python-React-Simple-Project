@@ -1,55 +1,62 @@
-import axios from 'axios';
-import { Task } from '../interfaces/task';
+import axios from "axios";
+import { Task } from "../interfaces/task";
 
-const API_BASE_URL = 'http://127.0.0.1:8080'; // Replace with your API base URL
+const API_BASE_URL = "http://127.0.0.1:8080"; // Replace with your API base URL
 
 const apiService = axios.create({
   baseURL: API_BASE_URL,
 });
 
-
-export const getUsers = async () => {
+export const getUsers = async (authToken) => {
   try {
-    const response = await apiService.get('/users/');
+    const response = await apiService.get("/users/");
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const getTasks = async () => {
+export const getTasks = async (headers) => {
   try {
-    const response = await apiService.get('/task/getall/');
+    const response = await apiService.get("/task/getall/", {
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const addTask = async (task:Task) => {
+export const addTask = async (headers, task: Task) => {
   try {
-    const response = await apiService.post('/task/add/',task);
+    const response = await apiService.post("/task/add/", task, {
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const editTask = async (task:Task) => {
+export const editTask = async (headers, task: Task) => {
   try {
-    const response = await apiService.put('/task/edit/',task);
+    const response = await apiService.put("/task/edit/", task, {
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteTask = async (id:string) => {
+export const deleteTask = async (headers, id: string) => {
   try {
-    const response = await apiService.delete('/task/delete/',{params:{ task_id:id}});
+    const response = await apiService.delete("/task/delete/", {
+      params: { task_id: id },
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-
